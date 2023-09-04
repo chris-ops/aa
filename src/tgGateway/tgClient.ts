@@ -3,8 +3,9 @@ import { StringSession } from "telegram/sessions"
 import { NewMessage, NewMessageEvent } from "telegram/events"
 
 import input from "input"
+import { EntityLike } from "telegram/define";
 
-class tgClient extends TelegramClient {
+export class EventListenerClient extends TelegramClient {
     constructor(
         stringSession: StringSession,
         apiId: number,
@@ -25,16 +26,12 @@ class tgClient extends TelegramClient {
         })
     }
 
-    public async sendMessageBanana(contractAddress) {
-        await this.sendMessage(
-            'https://t.me/BananaGunSniper_bot', 
-            { message: contractAddress }
-        )
+    public async eventNewMessage(callbackFn: (event: NewMessageEvent) => Promise<void>, entitiesToListen: EntityLike[] ) {
+        this.addEventHandler(
+            callbackFn, new NewMessage({
+                incoming: true,
+                fromUsers: entitiesToListen
+            })
+        )  
     }
-
-    public async eventNewMessage (event: NewMessageEvent) {
-        //check if the message comes from BananaGunSniper_bot
-        if (
-            event.message.peerId.className === 'PeerUser' &&
-            
 }

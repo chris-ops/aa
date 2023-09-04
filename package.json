@@ -1,23 +1,27 @@
 {
-   "name": "aa",
-   "version": "0.0.1",
-   "description": "Awesome project developed with TypeORM.",
-   "type": "commonjs",
-   "devDependencies": {
-      "@types/node": "^16.11.10",
-      "ethers": "^5.7.0",
-      "input": "^1.0.1",
-      "telegram": "^2.18.26",
-      "ts-node": "10.7.0",
-      "typescript": "4.5.2"
-   },
-   "dependencies": {
-      "pg": "^8.4.0",
-      "reflect-metadata": "^0.1.13",
-      "typeorm": "0.3.17"
-   },
-   "scripts": {
-      "start": "ts-node src/index.ts",
-      "typeorm": "typeorm-ts-node-commonjs"
-   }
+    "name": "aa",
+    "version": "0.0.1",
+    "description": "Awesome project developed with TypeORM.",
+    "type": "commonjs",
+    "devDependencies": {
+        "@types/node": "^16.18.48",
+        "@typescript-eslint/eslint-plugin": "^6.5.0",
+        "@typescript-eslint/parser": "^6.5.0",
+        "eslint": "^8.48.0",
+        "ethers": "^5.7.0",
+        "input": "^1.0.1",
+        "telegram": "^2.18.26",
+        "ts-node": "^10.7.0",
+        "tslib": "^2.6.2",
+        "typescript": "^4.5.2"
+    },
+    "dependencies": {
+        "pg": "^8.4.0",
+        "reflect-metadata": "^0.1.13",
+        "typeorm": "0.3.17"
+    },
+    "scripts": {
+        "start": "tsc && node build/index.js",
+        "typeorm": "typeorm-ts-node-commonjs"
+    }
 }

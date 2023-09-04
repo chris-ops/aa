@@ -1,6 +1,6 @@
 import 'reflect-metadata'
 import { DataSource } from 'typeorm'
-import { Token } from './entity/user/Token'
+import { Token } from './entity/Token'
 
 export const AppDataSource = new DataSource({
     type: 'postgres',

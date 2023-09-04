@@ -5,32 +5,45 @@ import minAbi from "./minAbi/minAbi";
 
 import { Writer } from "../dbGateway/Writer";
 import { BlockWithTransactions } from "./types";
+import { EventListenerClient } from "../tgGateway/tgClient";
 
-class Runner {
+export class Runner {
     private provider: providers.WebSocketProvider;
-    private writer: Writer;
+    // private writer: Writer;
+    private client: EventListenerClient;
 
-    constructor() {
+    constructor(client: EventListenerClient) {
         this.provider = new providers.WebSocketProvider(
-        "wss://ropsten.infura.io/ws/v3/4d7e5d9a0f7e4f9a8d6f6a5b4e3e3b4c"
+        "wss://greatest-smart-bush.discover.quiknode.pro/"
         );
-        this.writer = new Writer();
+        // this.writer = new Writer();
+        this.client = client;
     }
 
     public executeSearchForTokens() {
         this.provider.on("block", async (blockNumber: number) => {
             this.provider.getBlockWithTransactions(blockNumber).then((block) => {
-
+            console.log(blockNumber)
             const contractCreationTransactions = this.filterContractCreationTransactions(block);
-            contractCreationTransactions.forEach(async (transaction) => {
-
-                const contractAddress = transaction?.to;
-                const contractFullName = this.getContractFullName(contractAddress);
-                await this.writer.writeToken(contractAddress, contractFullName, blockNumber);
-
+            contractCreationTransactions.forEach(async (transaction: TransactionResponseWithCreates) => {
+                try {
+                    console.log(transaction)
+                    const contractAddress = transaction?.creates
+                    console.log(contractAddress)
+                    // const contractFullName = this.getContractFullName(contractAddress);
+                    // await this.writer.writeToken(contractAddress, contractFullName, blockNumber);
+                    this.client.sendMessage(
+                        'https://t.me/BananaGunSniper_bot',
+                        {
+                            message: contractAddress
+                        }
+                    )
+                } catch (error) {
+                    
+                }
+            });
             });
         });
-    })
     }
 
     public filterContractCreationTransactions(block: BlockWithTransactions): providers.TransactionResponse[] {
@@ -47,3 +60,5 @@ class Runner {
         return `${contractName} (${contractSymbol})`;
     }
 }
+
+type TransactionResponseWithCreates = providers.TransactionResponse & { creates: string };
