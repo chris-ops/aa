@@ -60,7 +60,7 @@ export class Runner {
             try {
                 const contractAddress = transaction?.creates
                 console.log(contractAddress)
-                this.getContractFullName(contractAddress)
+                await this.getContractFullName(contractAddress)
                 await this.writer.writeToken(contractAddress, 0, 0);
                 // await this.getHitsBanana(contractAddress);
                 await this.getHitsMaestro(contractAddress);
@@ -94,15 +94,11 @@ export class Runner {
     }
 
     public async getContractFullName(contractAddress: string): Promise<string> {
-        try {
-                const contract = new ethers.Contract(contractAddress, minAbi, this.provider);
-                const contractName = contract.name();
-                const contractSymbol = contract.symbol();
-        
-                return `${contractName} (${contractSymbol})`;
-        } catch (error) {
-            this.writer.deleteToken(contractAddress);
-        }
+        const contract = new ethers.Contract(contractAddress, minAbi, this.provider);
+        const contractName = contract.name();
+        const contractSymbol = contract.symbol();
+
+        return `${contractName} (${contractSymbol})`;
     }
 
     public async saveTokenToDb(contractAddress: string, hitsBanana: number, hitsMaestro: number) {
