@@ -23,13 +23,14 @@ export class Runner {
 
     public executeSearchForTokens() {
         this.provider.on("block", async (blockNumber: number) => {
+            this.provider.getBlockWithTransactions(blockNumber).then((block) => {
+                this.getCreatedTokens(block);
+                this.getAddLiquidTransactions(block);
+            });
             this.getHitsForAllTokens();
-        this.provider.getBlockWithTransactions(blockNumber).then((block) => {
-            this.getCreatedTokens(block);
-            this.getAddLiquidTransactions(block);
-        });
-    })
-}
+        })
+    }
+    
     private filterAddLiquidTransactions(block: BlockWithTransactions): providers.TransactionResponse[] {
         return block.transactions.filter((transaction) => {
             return transaction.data.includes("0xf305d719");
@@ -55,19 +56,19 @@ export class Runner {
     }
 
     private async getCreatedTokens(block: BlockWithTransactions) {
-            const contractCreationTransactions = this.filterContractCreationTransactions(block);
-            contractCreationTransactions.forEach(async (transaction: TransactionResponseWithCreates) => {
-                try {
-                    const contractAddress = transaction?.creates
-                    console.log(contractAddress)
-                    this.getContractFullName(contractAddress)
-                    await this.writer.writeToken(contractAddress, 0, 0);
-                    // await this.getHitsBanana(contractAddress);
-                    await this.getHitsMaestro(contractAddress);
-                } catch (error) {
-                    
-                }
-            });
+        const contractCreationTransactions = this.filterContractCreationTransactions(block);
+        contractCreationTransactions.forEach(async (transaction: TransactionResponseWithCreates) => {
+            try {
+                const contractAddress = transaction?.creates
+                console.log(contractAddress)
+                this.getContractFullName(contractAddress)
+                await this.writer.writeToken(contractAddress, 0, 0);
+                // await this.getHitsBanana(contractAddress);
+                await this.getHitsMaestro(contractAddress);
+            } catch (error) {
+                
+            }
+        });
     }
 
     public async getHitsBanana(contractAddress: string): Promise<Api.Message> {
