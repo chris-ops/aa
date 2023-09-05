@@ -69,7 +69,7 @@ const callbackMaestro = async (event: NewMessageEvent) => {
     if (!regexResult) return
     const tokenAddress: string[] = regexResult
 
-    if (hitsMaestro < 10) return
+    if (hitsMaestro < 20) return
 
     client.sendMessage(
         -1001848648579, 
