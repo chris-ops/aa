@@ -72,7 +72,7 @@ const callbackMaestro = async (event: NewMessageEvent) => {
     if (hitsMaestro < 20) return
 
     client.sendMessage(
-        -1001848648579, 
+        -978286972, 
         {
             message: `🚨 Maestro: <bold>${hitsMaestro}</bold> hits on <code>${tokenAddress[0]}</code> 🚨`,
             parseMode: "html"
