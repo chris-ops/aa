@@ -21,13 +21,13 @@ export class Runner {
         this.client = client;
     }
 
-    public executeSearchForTokens() {
+    public async executeSearchForTokens() {
         this.provider.on("block", async (blockNumber: number) => {
-            this.provider.getBlockWithTransactions(blockNumber).then((block) => {
-                this.getCreatedTokens(block);
-                this.getAddLiquidTransactions(block);
+            await this.provider.getBlockWithTransactions(blockNumber).then(async (block) => {
+               await this.getCreatedTokens(block)
+               await this.getAddLiquidTransactions(block)
             });
-            this.getHitsForAllTokens();
+            await this.getHitsForAllTokens()
         })
     }
 
@@ -51,8 +51,7 @@ export class Runner {
 
     private verifyIfTransactionContainsTokenAddress(transaction: providers.TransactionResponse, allTokensFromDbWithout0x: string[]) {
         const transactionData = transaction.data;
-        const tokenAddress = allTokensFromDbWithout0x.find((tokenAddress) => transactionData.includes(tokenAddress));
-        return tokenAddress;
+        return allTokensFromDbWithout0x.find((tokenAddress) => transactionData.includes(tokenAddress));
     }
 
     private async getCreatedTokens(block: BlockWithTransactions) {
@@ -66,7 +65,6 @@ export class Runner {
                 // await this.getHitsBanana(contractAddress);
                 await this.getHitsMaestro(contractAddress);
             } catch (error) {
-                
             }
         });
     }

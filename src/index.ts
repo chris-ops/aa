@@ -80,7 +80,6 @@ const callbackMaestro = async (event: NewMessageEvent) => {
     )
 
     runner.deleteTokenFromDb(tokenAddress[0])
-
 }
 
 client.startClient().then(async () => {
