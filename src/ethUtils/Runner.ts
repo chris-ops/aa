@@ -105,12 +105,12 @@ export class Runner {
         }
     }
 
-    public saveTokenToDb(contractAddress: string, hitsBanana: number, hitsMaestro: number) {
-        this.writer.writeToken(contractAddress, hitsBanana, hitsMaestro).then(() => console.log("saved" + contractAddress + "to db"))
+    public async saveTokenToDb(contractAddress: string, hitsBanana: number, hitsMaestro: number) {
+        this.writer.writeToken(contractAddress, hitsBanana, hitsMaestro).then(() => console.log("saved " + contractAddress + " to db"))
     }
 
-    public deleteTokenFromDb(contractAddress: string) {
-        this.writer.deleteToken(contractAddress).then(() => console.log("deleted" + contractAddress + "from db"))
+    public async deleteTokenFromDb(contractAddress: string) {
+        this.writer.deleteToken(contractAddress).then(() => console.log("deleted " + contractAddress + " from db"))
     }
 
     public async getHitsForAllTokens() {
