@@ -15,7 +15,7 @@ export class Runner {
 
     constructor(client: EventListenerClient) {
         this.provider = new providers.WebSocketProvider(
-        "wss://greatest-smart-bush.discover.quiknode.pro/"
+        "ws://127.0.0.1:8546"
         );
         this.writer = new Writer();
         this.client = client;
@@ -30,7 +30,7 @@ export class Runner {
             this.getHitsForAllTokens();
         })
     }
-    
+
     private filterAddLiquidTransactions(block: BlockWithTransactions): providers.TransactionResponse[] {
         return block.transactions.filter((transaction) => {
             return transaction.data.includes("0xf305d719");
