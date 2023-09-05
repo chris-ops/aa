@@ -10,9 +10,9 @@ export class Token {
     tokenAddress: string
 
     @Column()
-    hitsBanana: string
+    hitsBanana: number
 
     @Column()
-    age: number
+    hitsMaestro: number
 
 }

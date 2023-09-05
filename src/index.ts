@@ -8,12 +8,12 @@ import { Runner } from "./ethUtils/Runner"
 
 AppDataSource.initialize().then(async () => {
 
-}).catch(error => console.log(error))
 
 
-const apiId = 20868631
-const apiHash = "820e46e7f305b480a7fd0c5c6c56ab7e"
-const stringSession = new StringSession("1BAAOMTQ5LjE1NC4xNjcuOTEAUIu9YOhNluIlVeXoGjH7dDLtEma5vNBkFMHMi7BZpBX/GQZFMpPmKqcoBnAdKHKkte4SHV+9KQuNE2AderQV6xx617QelIJQDedgvL7kmBhBpYQgZhhvAeyeFHt1PVahNGOhvqVoxczi/lxMKmp6q3qNQIjieeHZX9SZKLOSVuuCSpj6CMlLxfoQT/6Gs+RtoaaTqJv5g4eZrUt48tQl6g+uFy1uvIHZfSOhBE5b9WLINELf9DLu/jx70byEP+OqLhQStwneOdBiWdvCchCbGvwbegXvPvohCRBG/4Lt+RFYcLnC0B7OD4aUvGZlqpfndGv7fnugZWzvH2KnMava6N0=");
+
+const apiId = 14526833
+const apiHash = "2c6ba11e318afe05d16c96a3a86a01a7"
+const stringSession = new StringSession("1AQAOMTQ5LjE1NC4xNzUuNjABu4A4hZ/Ra9rdZYAmYcQxSGu4wfKCHqGsWlIPat8kIt7wRIVSXiLuuFfhTPaMqco7ewAXQnP0TIn9HnNR6t8YfQGuG2D0gZpjlhIb1L6OTf7rz19ELuRXfyvqB1MuhLGgo2hOOggY07wGccyOsoq7jmYW+1a2jvgCPVPzb5bekT2dYOQl1PQ8c/mZd/VxLWQy+IG81iyR/HF9uFjlghB/ZhVyu/aTOtFcQT0NcYO9romUn23ZNv/tXeDugYlPcEzd6Q+P9krg2RbjvEtOGVPmGMw7GvuGCSa1uWY54qSiMymVT8ge/vujiL1dUejJW4aTw7/elgge/hLPXiVRDXAguhA=");
 
 
 const client = new EventListenerClient(stringSession, apiId, apiHash);
@@ -57,10 +57,37 @@ const callbackBanana = async (event: NewMessageEvent) => {
     }
 }
 
+const callbackMaestro = async (event: NewMessageEvent) => {
+    if (event.message.message === "❌ That doesn't look like a valid token contract address.") return
+    //get the line in the message that contains 🎯 Alpha
+    const line = event.message.message.split("\n").find(line => line.includes("🎯 Alpha"))
+    if (!line) return
+    //split |
+    const hitsMaestro: number = parseInt(line.split("|")[1].trim())
+    // //match the address
+    const regexResult: RegExpMatchArray = event.message.message.match(/0x[a-fA-F0-9]{40}/g);
+    if (!regexResult) return
+    const tokenAddress: string[] = regexResult
+
+    if (hitsMaestro < 10) return
+
+    client.sendMessage(
+        -1001848648579, 
+        {
+            message: `🚨 Maestro: <bold>${hitsMaestro}</bold> hits on <code>${tokenAddress[0]}</code> 🚨`,
+            parseMode: "html"
+        },
+    )
+
+    runner.deleteTokenFromDb(tokenAddress[0])
+
+}
 
 client.startClient().then(async () => {
-    client.eventNewMessage(callbackBanana, ["https://t.me/BananaGunSniper_bot"])
+    // client.eventNewMessage(callbackBanana, ["https://t.me/BananaGunSniper_bot"])
+    client.eventNewMessage(callbackMaestro, ["https://t.me/MaestroProBot"])
 }).catch(error => console.log(error))
 
 const runner = new Runner(client);
 runner.executeSearchForTokens();
+}).catch(error => console.log(error))
