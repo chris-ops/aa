@@ -7,6 +7,16 @@ import { Writer } from "../dbGateway/Writer";
 import { BlockWithTransactions } from "./types";
 import { EventListenerClient } from "../tgGateway/tgClient";
 import { Api } from "telegram";
+import { Token } from "../entity/Token";
+
+require("dotenv").config({
+    path:
+        process.env.NODE_ENV === "production"
+            ? ".env.production"
+            : ".env.development",
+});
+
+const ethNode = process.env.ETH_NODE;
 
 export class Runner {
     private provider: providers.WebSocketProvider;
@@ -14,9 +24,7 @@ export class Runner {
     private client: EventListenerClient;
 
     constructor(client: EventListenerClient) {
-        this.provider = new providers.WebSocketProvider(
-        "ws://127.0.0.1:8546"
-        );
+        this.provider = new providers.WebSocketProvider(ethNode);
         this.writer = new Writer();
         this.client = client;
     }
@@ -28,6 +36,7 @@ export class Runner {
                await this.getAddLiquidTransactions(block)
             });
             await this.getHitsForAllTokens()
+            
         })
     }
 
@@ -35,6 +44,10 @@ export class Runner {
         return block.transactions.filter((transaction) => {
             return transaction.data.includes("0xf305d719");
         });
+    }
+
+    public async deleteMostRecentToken() {
+        await this.writer.deleteMostRecentToken();
     }
 
     private async getAddLiquidTransactions(block: BlockWithTransactions) {
@@ -60,8 +73,10 @@ export class Runner {
             try {
                 const contractAddress = transaction?.creates
                 console.log(contractAddress)
-                await this.getContractFullName(contractAddress)
-                await this.writer.writeToken(contractAddress, 0, 0);
+                // await this.getContractFullName(contractAddress).catch(async () => {
+                //     await this.deleteTokenFromDb(contractAddress);
+                // });
+                await this.writer.writeToken(contractAddress, 0, 0, new Date());
                 // await this.getHitsBanana(contractAddress);
                 await this.getHitsMaestro(contractAddress);
             } catch (error) {
@@ -101,10 +116,6 @@ export class Runner {
         return `${contractName} (${contractSymbol})`;
     }
 
-    public async saveTokenToDb(contractAddress: string, hitsBanana: number, hitsMaestro: number) {
-        this.writer.writeToken(contractAddress, hitsBanana, hitsMaestro).then(() => console.log("saved " + contractAddress + " to db"))
-    }
-
     public async deleteTokenFromDb(contractAddress: string) {
         this.writer.deleteToken(contractAddress).then(() => console.log("deleted " + contractAddress + " from db"))
     }
@@ -114,6 +125,15 @@ export class Runner {
         tokens.forEach(async (token) => {
             // const hitsBanana = await this.getHitsBanana(token.tokenAddress);
             await this.getHitsMaestro(token.tokenAddress);
+        });
+        this.removeOldTokens(tokens);
+    }
+
+    private removeOldTokens(tokens: Token[]) {
+        tokens.forEach(async (token) => {
+            //if older than 5 minutes, delete
+            if (token.createdAt.getTime() < Date.now() - 5 * 60 * 1000)
+                await this.writer.deleteToken(token.tokenAddress);
         });
     }
 }

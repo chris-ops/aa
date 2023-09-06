@@ -11,11 +11,13 @@ export class Writer {
     this.tokenRepository = this.dataSource.manager.getRepository(Token);
   }
 
-  public async writeToken(tokenAddress: string, hitsBanana: number, hitsMaestro: number) {
+  public async writeToken(tokenAddress: string, hitsBanana: number, hitsMaestro: number, date: Date) {
     const token = new Token();
     token.tokenAddress = tokenAddress.toLowerCase();
     token.hitsBanana = hitsBanana || 0;
     token.hitsMaestro = hitsMaestro;
+    token.createdAt = date;
+    
 
     await this.dataSource.manager.save(token);
   }
@@ -23,6 +25,16 @@ export class Writer {
   public async deleteToken(tokenAddress: string) {
     tokenAddress = tokenAddress.toLowerCase();
     await this.dataSource.manager.delete(Token, { tokenAddress });
+  }
+
+  public async deleteMostRecentToken() {
+    const mostRecentToken = await this.tokenRepository.find({
+      order: {
+        createdAt: "DESC"
+      },
+      take: 1
+    });
+    await this.dataSource.manager.delete(Token, { id: mostRecentToken[0].id });
   }
 
   public async getAllTokens() {
