@@ -59,7 +59,7 @@ const callbackBanana = async (event: NewMessageEvent) => {
 
 const callbackMaestro = async (event: NewMessageEvent) => {
     if (event.message.message === "❌ That doesn't look like a valid token contract address.") return runner.deleteMostRecentToken()
-    if (!event.message.message.includes('⚠️ Token has no liquidity yet!')) return runner.deleteMostRecentToken()
+    if (event.message.message.includes('⚠️ Token has no liquidity yet!') == false) return runner.deleteMostRecentToken()
     //get the line in the message that contains 🎯 Alpha
     const line = event.message.message.split("\n").find(line => line.includes("🎯 Alpha"))
     if (!line) return
