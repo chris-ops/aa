@@ -55,10 +55,10 @@ export class Runner {
         addLiquidTransactions.forEach(async (transaction: providers.TransactionResponse) => {
             const allTokensFromDb = await this.writer.getAllTokens();
             //remove the 0x from the allTokensFromDb
-            const allTokensFromDbWithout0x = allTokensFromDb.map((token) => token.tokenAddress.slice(2));
+            const allTokensFromDbWithout0x = allTokensFromDb.map((token) => token.tokenAddress.slice(2).toLowerCase());
             //now verify if the transaction.data contains any of them
             const tokenAddress = this.verifyIfTransactionContainsTokenAddress(transaction, allTokensFromDbWithout0x);
-            if (tokenAddress) this.writer.deleteToken(tokenAddress);
+            if (tokenAddress) await this.writer.deleteToken(`0x${tokenAddress}`);
         });
     }
 
