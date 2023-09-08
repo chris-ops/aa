@@ -59,7 +59,6 @@ const callbackBanana = async (event: NewMessageEvent) => {
 
 const callbackMaestro = async (event: NewMessageEvent) => {
     if (event.message.message === "❌ That doesn't look like a valid token contract address.") return runner.deleteMostRecentToken()
-    if (!event.message.message.includes('Liquidity: 0 WETH')) return runner.deleteMostRecentToken()
     //get the line in the message that contains 🎯 Alpha
     const line = event.message.message.split("\n").find(line => line.includes("🎯 Alpha"))
     if (!line) return
@@ -69,6 +68,7 @@ const callbackMaestro = async (event: NewMessageEvent) => {
     const regexResult: RegExpMatchArray = event.message.message.match(/0x[a-fA-F0-9]{40}/g);
     if (!regexResult) return
     const tokenAddress: string[] = regexResult
+    if (!event.message.message.includes('Liquidity: 0 WETH')) return runner.deleteTokenFromDb(tokenAddress[0])
 
     if (hitsMaestro < 20) return
 
