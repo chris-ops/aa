@@ -68,7 +68,6 @@ const callbackMaestro = async (event: NewMessageEvent) => {
     const regexResult: RegExpMatchArray = event.message.message.match(/0x[a-fA-F0-9]{40}/g);
     if (!regexResult) return
     const tokenAddress: string[] = regexResult
-    if (!event.message.message.includes('Liquidity: 0 WETH')) return runner.deleteTokenFromDb(tokenAddress[0])
 
     if (hitsMaestro < 20) return
 
