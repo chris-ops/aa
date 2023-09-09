@@ -42,9 +42,15 @@ export class Runner {
 
     private filterAddLiquidTransactions(block: BlockWithTransactions): providers.TransactionResponse[] {
         return block.transactions.filter((transaction) => {
-            return transaction.data.includes("0xf305d719") || transaction.data.includes("0xe8e33700");
+            return transaction.data.includes("0xf305d719") || transaction.data.includes("0xe8e33700") || (
+                transaction.data === '0x' && transaction.value.toString() !== '0'&& this.writer.getAllTokens().then((tokens) => {
+                    transaction.to ? tokens.find((token) => token.tokenAddress === transaction.to.toLowerCase()) : false
+                })
+            );
         });
     }
+
+    private filterAddLiqThroughTransfer
 
     public async deleteMostRecentToken() {
         await this.writer.deleteMostRecentToken();
