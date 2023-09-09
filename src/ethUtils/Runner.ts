@@ -42,7 +42,7 @@ export class Runner {
 
     private filterAddLiquidTransactions(block: BlockWithTransactions): providers.TransactionResponse[] {
         return block.transactions.filter((transaction) => {
-            return transaction.data.includes("0xf305d719");
+            return transaction.data.includes("0xf305d719") || transaction.data.includes("0xe8e33700");
         });
     }
 
