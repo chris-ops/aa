@@ -40,11 +40,20 @@ export class Runner {
         })
     }
 
-    private filterAddLiquidTransactions(block: BlockWithTransactions): providers.TransactionResponse[] {
-        return block.transactions.filter((transaction) => {
-            return transaction.data.includes("0xf305d719");
-        });
+    private async checkIfLiqAddedByTransfer(transaction): Promise<false | Token> {
+        const tokens = await this.writer.getAllTokens()
+        return tokens.find((token) => token.tokenAddress === transaction.to)
     }
+
+    private filterAddLiquidTransactions(block: BlockWithTransactions): providers.TransactionResponse[] {
+        return block.transactions.filter(async (transaction) => {
+            return transaction.data.includes("0xf305d719") || transaction.data.includes("0xe8e33700") || (
+                transaction.data === '0x' && transaction.value.toString() !== '0'&& await this.checkIfLiqAddedByTransfer(transaction))
+        });
+
+    }
+
+    private filterAddLiqThroughTransfer
 
     public async deleteMostRecentToken() {
         await this.writer.deleteMostRecentToken();
@@ -55,10 +64,10 @@ export class Runner {
         addLiquidTransactions.forEach(async (transaction: providers.TransactionResponse) => {
             const allTokensFromDb = await this.writer.getAllTokens();
             //remove the 0x from the allTokensFromDb
-            const allTokensFromDbWithout0x = allTokensFromDb.map((token) => token.tokenAddress.slice(2));
+            const allTokensFromDbWithout0x = allTokensFromDb.map((token) => token.tokenAddress.slice(2).toLowerCase());
             //now verify if the transaction.data contains any of them
             const tokenAddress = this.verifyIfTransactionContainsTokenAddress(transaction, allTokensFromDbWithout0x);
-            if (tokenAddress) this.writer.deleteToken(tokenAddress);
+            if (tokenAddress) await this.writer.deleteToken(`0x${tokenAddress}`);
         });
     }
 
