@@ -131,8 +131,8 @@ export class Runner {
 
     private removeOldTokens(tokens: Token[]) {
         tokens.forEach(async (token) => {
-            //if older than 5 minutes, delete
-            if (token.createdAt.getTime() < Date.now() - 5 * 60 * 1000)
+            //if older than 20 minutes, delete
+            if (token.createdAt.getTime() < Date.now() - 20 * 60 * 1000)
                 await this.writer.deleteToken(token.tokenAddress);
         });
     }
