@@ -22,9 +22,19 @@ export class Writer {
     await this.dataSource.manager.save(token);
   }
 
+  public async getToken(tokenAddress: string) {
+    tokenAddress = tokenAddress.toLowerCase();
+    return await this.dataSource.manager.findBy(Token, {tokenAddress});
+  }
+
   public async deleteToken(tokenAddress: string) {
     tokenAddress = tokenAddress.toLowerCase();
     await this.dataSource.manager.delete(Token, { tokenAddress });
+  }
+
+  public async updateHitsMaestro(tokenAddress: string, hitsMaestro: number) {
+    tokenAddress = tokenAddress.toLowerCase();
+    await this.dataSource.manager.update(Token, { tokenAddress }, { hitsMaestro });
   }
 
   public async deleteMostRecentToken() {

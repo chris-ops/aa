@@ -5,10 +5,9 @@ import { EventListenerClient } from "./tgGateway/tgClient"
 import { NewMessageEvent } from "telegram/events"
 
 import { Runner } from "./ethUtils/Runner"
+import { Writer } from "./dbGateway/Writer"
 
 AppDataSource.initialize().then(async () => {
-
-
 
 
 const apiId = 14526833
@@ -17,7 +16,7 @@ const stringSession = new StringSession("1AQAOMTQ5LjE1NC4xNzUuNjABu4A4hZ/Ra9rdZY
 
 
 const client = new EventListenerClient(stringSession, apiId, apiHash);
-
+const writer = new Writer();
 
 const callbackBanana = async (event: NewMessageEvent) => {
     if (event.message.message.includes("Enter The Max")) {
@@ -70,6 +69,29 @@ const callbackMaestro = async (event: NewMessageEvent) => {
     const tokenAddress: string[] = regexResult
 
     if (hitsMaestro < 20) return
+    client.sendMessage(
+        -1001848648579, 
+        {
+            message: `🚨 Maestro: <bold>${hitsMaestro}</bold> hits on <code>${tokenAddress[0]}</code> 🚨`,
+            parseMode: "html"
+        },
+    )
+    writer.updateHitsMaestro(tokenAddress[0], hitsMaestro)
+        client.sendMessage(
+            'https://t.me/SusScanbot',
+            {
+                message: tokenAddress[0]
+            }
+        )
+
+    runner.deleteTokenFromDb(tokenAddress[0])
+}
+
+const callbackSusBot = async (event: NewMessageEvent) => {
+    if (!event.message.message.includes("LIQ/MC: $0 / $0")) return runner.deleteMostRecentToken()
+
+    const token = RegExp(/0x[a-fA-F0-9]{40}/g).exec(event.message.message)
+    const {hitsMaestro} = writer.getToken(token[0].toLowerCase())[0]
 
     client.sendMessage(
         -1001848648579, 
@@ -79,12 +101,11 @@ const callbackMaestro = async (event: NewMessageEvent) => {
         },
     )
 
-    runner.deleteTokenFromDb(tokenAddress[0])
-}
 
 client.startClient().then(async () => {
     // client.eventNewMessage(callbackBanana, ["https://t.me/BananaGunSniper_bot"])
     client.eventNewMessage(callbackMaestro, ["https://t.me/MaestroProBot"])
+    client.eventNewMessage(callbackSusBot, ["https://t.me/SusScanbot"])
 }).catch(error => console.log(error))
 
 const runner = new Runner(client);
