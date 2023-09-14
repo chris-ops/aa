@@ -96,11 +96,11 @@ const callbackSusBot = async (event: NewMessageEvent) => {
     client.sendMessage(
         -1001848648579, 
         {
-            message: `🚨 Maestro: <bold>${hitsMaestro}</bold> hits on <code>${tokenAddress[0]}</code> 🚨`,
+            message: `🚨 Maestro: <bold>${hitsMaestro}</bold> hits on <code>${token[0].toLowerCase()}</code> 🚨`,
             parseMode: "html"
         },
     )
-
+}
 
 client.startClient().then(async () => {
     // client.eventNewMessage(callbackBanana, ["https://t.me/BananaGunSniper_bot"])
