@@ -93,13 +93,16 @@ const callbackSusBot = async (event: NewMessageEvent) => {
     const token = RegExp(/0x[a-fA-F0-9]{40}/g).exec(event.message.message)
     const {hitsMaestro} = writer.getToken(token[0].toLowerCase())[0]
 
-    client.sendMessage(
-        -1001848648579, 
-        {
-            message: `🚨 Maestro: <bold>${hitsMaestro}</bold> hits on <code>${token[0].toLowerCase()}</code> 🚨`,
-            parseMode: "html"
-        },
-    )
+    const chats = [-978286972, -1001848648579]
+    for (let i = 0; i < chats.length; i++) {
+        client.sendMessage(
+            chats[i], 
+            {
+                message: `🚨 Maestro: <bold>${hitsMaestro}</bold> hits on <code>${token[0].toLowerCase()}</code> 🚨`,
+                parseMode: "html"
+            },
+        )
+    }
 }
 
 client.startClient().then(async () => {
