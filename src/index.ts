@@ -74,7 +74,7 @@ const callbackMaestro = async (event: NewMessageEvent) => {
         client.sendMessage(
             chats[i], 
             {
-                message: `🚨 Maestro: <bold>${hitsMaestro}</bold> hits on <code>${token[0].toLowerCase()}</code> 🚨`,
+                message: `🚨 Maestro: <bold>${hitsMaestro}</bold> hits on <code>${tokenAddress[0].toLowerCase()}</code> 🚨`,
                 parseMode: "html"
             },
         )
