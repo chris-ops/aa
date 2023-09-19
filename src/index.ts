@@ -69,13 +69,25 @@ const callbackMaestro = async (event: NewMessageEvent) => {
     const tokenAddress: string[] = regexResult
 
     if (hitsMaestro < 20) return
-    await writer.updateHitsMaestro(tokenAddress[0], hitsMaestro)
+    const chats = [-978286972, -1001848648579]
+    for (let i = 0; i < chats.length; i++) {
         client.sendMessage(
-            'https://t.me/SusScanbot',
+            chats[i], 
             {
-                message: tokenAddress[0]
-            }
+                message: `🚨 Maestro: <bold>${hitsMaestro}</bold> hits on <code>${token[0].toLowerCase()}</code> 🚨`,
+                parseMode: "html"
+            },
         )
+    }
+
+    await writer.updateHitsMaestro(tokenAddress[0], hitsMaestro)
+    // client.sendMessage(
+    //     'https://t.me/SusScanbot',
+    //     {
+    //         message: tokenAddress[0]
+    //     }
+    // )
+    await runner.deleteTokenFromDb(tokenAddress[0])
 
 }
 
