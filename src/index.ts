@@ -69,14 +69,7 @@ const callbackMaestro = async (event: NewMessageEvent) => {
     const tokenAddress: string[] = regexResult
 
     if (hitsMaestro < 20) return
-    client.sendMessage(
-        -1001848648579, 
-        {
-            message: `🚨 Maestro: <bold>${hitsMaestro}</bold> hits on <code>${tokenAddress[0]}</code> 🚨`,
-            parseMode: "html"
-        },
-    )
-    writer.updateHitsMaestro(tokenAddress[0], hitsMaestro)
+    await writer.updateHitsMaestro(tokenAddress[0], hitsMaestro)
         client.sendMessage(
             'https://t.me/SusScanbot',
             {
@@ -84,7 +77,6 @@ const callbackMaestro = async (event: NewMessageEvent) => {
             }
         )
 
-    runner.deleteTokenFromDb(tokenAddress[0])
 }
 
 const callbackSusBot = async (event: NewMessageEvent) => {
@@ -103,6 +95,7 @@ const callbackSusBot = async (event: NewMessageEvent) => {
             },
         )
     }
+    runner.deleteTokenFromDb(token[0])
 }
 
 client.startClient().then(async () => {
