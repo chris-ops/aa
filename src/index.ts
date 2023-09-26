@@ -12,7 +12,7 @@ AppDataSource.initialize().then(async () => {
 
 const apiId = 20868631
 const apiHash = "820e46e7f305b480a7fd0c5c6c56ab7e"
-const stringSession = new StringSession("");
+const stringSession = new StringSession("1BAAOMTQ5LjE1NC4xNjcuOTEAUBr4bAhLkv0tkBwkMDgZHNoeQpcXPDA2JHA4ZO67Kyz6kNhiDV/AZRXD/E+oMHq8sNbneELGaqQo83A/ZfTqg0YiIanpgWJuXHDr/NHPkw//iJmnx8lANxh2mF6hccfDceYxSYzg3Tbjwztidofqk5ayU893Q9W+3dCZZnzSUf6LDHIuI/hGjxyr5bHoYDb4/0AEkrXKm+guK34NCKcHRdJf8YkZvCnC9rTITh9uM98ZB0wJJ2tIWTcvTuYWX7HnnzhMudnb5ZUwDF/Xa0/EbppgHbYLxfpAdMjRGZUgH2R0mrYj6Ih6iv9fkcDxhEMKzd/6cQO5oBtSmIFgzNkFIgc=");
 
 
 const client = new EventListenerClient(stringSession, apiId, apiHash);
