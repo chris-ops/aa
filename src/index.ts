@@ -10,9 +10,9 @@ import { Writer } from "./dbGateway/Writer"
 AppDataSource.initialize().then(async () => {
 
 
-const apiId = 14526833
-const apiHash = "2c6ba11e318afe05d16c96a3a86a01a7"
-const stringSession = new StringSession("1AQAOMTQ5LjE1NC4xNzUuNjABu4A4hZ/Ra9rdZYAmYcQxSGu4wfKCHqGsWlIPat8kIt7wRIVSXiLuuFfhTPaMqco7ewAXQnP0TIn9HnNR6t8YfQGuG2D0gZpjlhIb1L6OTf7rz19ELuRXfyvqB1MuhLGgo2hOOggY07wGccyOsoq7jmYW+1a2jvgCPVPzb5bekT2dYOQl1PQ8c/mZd/VxLWQy+IG81iyR/HF9uFjlghB/ZhVyu/aTOtFcQT0NcYO9romUn23ZNv/tXeDugYlPcEzd6Q+P9krg2RbjvEtOGVPmGMw7GvuGCSa1uWY54qSiMymVT8ge/vujiL1dUejJW4aTw7/elgge/hLPXiVRDXAguhA=");
+const apiId = 20868631
+const apiHash = "820e46e7f305b480a7fd0c5c6c56ab7e"
+const stringSession = new StringSession("");
 
 
 const client = new EventListenerClient(stringSession, apiId, apiHash);
